@@ -9,11 +9,13 @@ Mini Dreamer is an experimental **interactive world model** that learns to predi
 
 The system continuously improves its predictions using **online training, replay buffers, and latent state dynamics**, while visualizing prediction quality and training metrics live.
 
-This project is inspired by research on **world models and predictive representation learning**.
+This project demonstrates a minimal platform for exploring **predictive representation learning, world models, and online learning systems**.
 
 ---
 
 # Demo
+
+<video src="assets/demo.mp4" width="900" autoplay loop muted></video>
 
 The interface displays:
 
@@ -21,14 +23,15 @@ The interface displays:
 |------------------|-----------------|
 | Ground truth frame | Model's predicted next frame |
 
-Additional panels show:
+Additional panels visualize:
 
-- prediction error heatmap
-- learning metrics
-- training curves
-- latent state statistics
+- prediction error heatmap  
+- learning metrics  
+- training curves  
+- replay buffer statistics  
+- latent state information  
 
-*(GIF demo recommended here)*
+As the agent explores the environment, the model **gradually improves its predictions in real time**.
 
 ---
 
@@ -44,11 +47,13 @@ camera rotation
 minimap visualization
 ```
 
+The environment provides continuous observations used for training the world model.
+
 ---
 
 ### World model architecture
 
-The model learns a predictive latent representation of the environment.
+The system learns a predictive latent representation of the environment.
 
 Pipeline:
 
@@ -66,7 +71,7 @@ decoder
 predicted observation_{t+1}
 ```
 
-The system predicts the next observation conditioned on the current state and action.
+The model predicts the next observation conditioned on the current latent state and the executed action.
 
 ---
 
@@ -74,21 +79,23 @@ The system predicts the next observation conditioned on the current state and ac
 
 The model updates continuously while the environment runs.
 
+Training loop:
+
 ```
 (obs_t, action, obs_t+1)
-       ↓
-   replay buffer
-       ↓
-   mini-batch sampling
-       ↓
-   gradient update
+        ↓
+    replay buffer
+        ↓
+    mini-batch sampling
+        ↓
+    gradient update
 ```
 
-This allows observing **learning progress live**.
+This allows observing **learning progress live during interaction**.
 
 ---
 
-### Replay buffer training
+### Replay buffer
 
 Recent experience is stored in a circular replay buffer:
 
@@ -96,46 +103,46 @@ Recent experience is stored in a circular replay buffer:
 (obs_t, action, obs_t+1)
 ```
 
-Mini-batches are sampled to perform gradient updates during gameplay.
+Mini-batches sampled from the buffer are used for gradient updates during gameplay.
 
 ---
 
 ### Prediction quality metrics
 
-Multiple metrics measure prediction performance:
+The system evaluates prediction performance using several metrics:
 
-- **MSE** – mean squared error
-- **MAE** – mean absolute error
-- **PSNR** – peak signal-to-noise ratio
-- **SSIM** – structural similarity
-- **Histogram correlation**
-- **RGB channel error**
+- **MSE** - Mean Squared Error  
+- **MAE** - Mean Absolute Error  
+- **PSNR** - Peak Signal-to-Noise Ratio  
+- **SSIM** - Structural Similarity  
+- **Histogram Correlation**  
+- **RGB Channel Error**
 
-Metrics are tracked over time to show model improvement.
+Metrics are tracked over time to measure **model improvement**.
 
 ---
 
 ### Live training visualization
 
-The interface visualizes:
+The interface provides real-time insight into the learning process:
 
-- prediction quality
+- prediction quality metrics
+- error heatmaps
 - training loss
-- gradient norm
+- gradient norms
 - learning rate
 - replay buffer size
 - latent state statistics
-- prediction error heatmap
 
-This makes the learning dynamics directly observable.
+This makes the internal dynamics of the model visible during training.
 
 ---
 
 ### Pure Dream Mode
 
-The model can run in **pure dream mode**, where it predicts future frames based only on its own predictions rather than real observations.
+The system supports **Pure Dream Mode**, where the model generates predictions based solely on its own previous predictions rather than real observations.
 
-This reveals the internal generative dynamics of the world model.
+This allows exploring the **internal generative dynamics of the learned world model**.
 
 ---
 
@@ -147,7 +154,7 @@ H      toggle error heatmap
 L      toggle online learning
 P      pure dream mode
 R      reset latent state
-F5     save checkpoint
+F5     save model checkpoint
 Q      quit
 ```
 
@@ -178,7 +185,7 @@ pygame
 
 ---
 
-# Running
+# Running the Project
 
 Start the interactive simulation:
 
@@ -208,13 +215,16 @@ Arguments:
 mini-dreamer
 
 play_learn.py
-    interactive environment + online learning
+    interactive environment + online training
 
 train.py
     world model training utilities
 
 world_gen.py
     procedural environment generation
+
+assets/
+    demo video
 
 checkpoints/
     saved model weights
@@ -227,39 +237,44 @@ checkpoints/
 The model optimizes a combined objective:
 
 ```
-L = reconstruction_loss + β * KL_divergence
+L = reconstruction_loss + β · KL_divergence
 ```
 
-Where
+Where:
 
-- reconstruction loss = L1 prediction error
-- KL divergence regularizes the latent representation
+- **reconstruction loss** = L1 prediction error  
+- **KL divergence** regularizes the latent representation  
+
+This objective encourages the model to learn a **compact predictive representation of the environment**.
 
 ---
 
-# Purpose
+# Purpose of the Project
 
-This project serves as a **minimal experimental platform for exploring world models and predictive learning**.
+Mini Dreamer is intended as a **minimal experimental platform for studying world models and predictive learning**.
 
-It demonstrates:
+The project demonstrates:
 
 - predictive representation learning
 - recurrent latent state models
 - replay buffer training
-- real-time model improvement
+- real-time online learning
 - interactive ML visualization
+
+The code is intentionally lightweight and designed for experimentation.
 
 ---
 
-# Future Work
+# Possible Extensions
 
-Potential extensions:
+Future directions may include:
 
-- reinforcement learning agent
+- reinforcement learning agents
 - curiosity-driven exploration
 - transformer-based world models
 - larger environments
-- dataset logging and offline training
+- dataset logging for offline training
+- multi-agent environments
 
 ---
 
