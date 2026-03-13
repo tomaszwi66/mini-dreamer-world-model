@@ -5,17 +5,19 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-Mini Dreamer is an experimental **interactive world model** that learns to predict the next observation **while you explore an environment in real time**.
+Mini Dreamer is an experimental **interactive world model** that learns to predict future observations **while you explore an environment in real time**.
 
-The system continuously improves its predictions using **online training, replay buffers, and latent state dynamics**, while visualizing prediction quality and training metrics live.
+The system continuously improves its predictions using **online learning, replay buffers, and latent dynamics**, while visualizing prediction quality and training metrics live.
 
-This project demonstrates a minimal platform for exploring **predictive representation learning, world models, and online learning systems**.
+This project serves as a minimal platform for exploring **predictive representation learning and world models**.
 
 ---
 
 # Demo
 
-<video src="assets/demo.mp4" width="900" autoplay loop muted></video>
+[![Mini Dreamer Demo](assets/demo_preview.png)](assets/demo.mp4)
+
+*Click the image to watch the demo video.*
 
 The interface displays:
 
@@ -39,15 +41,13 @@ As the agent explores the environment, the model **gradually improves its predic
 
 ### Interactive exploration
 
-Control an agent moving through a procedurally generated environment.
+Explore a procedurally generated environment while the model learns.
 
 ```
 WASD movement
 camera rotation
 minimap visualization
 ```
-
-The environment provides continuous observations used for training the world model.
 
 ---
 
@@ -75,7 +75,7 @@ The model predicts the next observation conditioned on the current latent state 
 
 ---
 
-### Real-time online learning
+### Online learning during gameplay
 
 The model updates continuously while the environment runs.
 
@@ -91,25 +91,13 @@ Training loop:
     gradient update
 ```
 
-This allows observing **learning progress live during interaction**.
-
----
-
-### Replay buffer
-
-Recent experience is stored in a circular replay buffer:
-
-```
-(obs_t, action, obs_t+1)
-```
-
-Mini-batches sampled from the buffer are used for gradient updates during gameplay.
+This enables **live learning while interacting with the environment**.
 
 ---
 
 ### Prediction quality metrics
 
-The system evaluates prediction performance using several metrics:
+Prediction accuracy is evaluated using multiple metrics:
 
 - **MSE** - Mean Squared Error  
 - **MAE** - Mean Absolute Error  
@@ -118,31 +106,54 @@ The system evaluates prediction performance using several metrics:
 - **Histogram Correlation**  
 - **RGB Channel Error**
 
-Metrics are tracked over time to measure **model improvement**.
+Metrics are tracked over time to measure **learning progress**.
 
 ---
 
 ### Live training visualization
 
-The interface provides real-time insight into the learning process:
+The interface visualizes:
 
-- prediction quality metrics
-- error heatmaps
+- prediction quality
 - training loss
 - gradient norms
 - learning rate
 - replay buffer size
 - latent state statistics
+- prediction error heatmaps
 
-This makes the internal dynamics of the model visible during training.
+This makes the learning dynamics visible in real time.
 
 ---
 
 ### Pure Dream Mode
 
-The system supports **Pure Dream Mode**, where the model generates predictions based solely on its own previous predictions rather than real observations.
+The model can run in **Pure Dream Mode**, where it generates predictions based only on its own previous predictions rather than real observations.
 
-This allows exploring the **internal generative dynamics of the learned world model**.
+This allows exploration of the **internal generative dynamics** of the learned world model.
+
+---
+
+# Quick Start
+
+Clone the repository:
+
+```
+git clone https://github.com/yourusername/mini-dreamer.git
+cd mini-dreamer
+```
+
+Install dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+Run the interactive environment:
+
+```
+python play_learn.py
+```
 
 ---
 
@@ -160,40 +171,7 @@ Q      quit
 
 ---
 
-# Installation
-
-Clone the repository:
-
-```
-git clone https://github.com/yourusername/mini-dreamer.git
-cd mini-dreamer
-```
-
-Install dependencies:
-
-```
-pip install -r requirements.txt
-```
-
-Dependencies:
-
-```
-torch
-numpy
-pygame
-```
-
----
-
-# Running the Project
-
-Start the interactive simulation:
-
-```
-python play_learn.py
-```
-
-Optional parameters:
+# Running With Options
 
 ```
 python play_learn.py --ckpt model.pt --seed 7 --scale 6
@@ -206,6 +184,30 @@ Arguments:
 --seed    environment seed
 --scale   rendering scale
 ```
+
+---
+
+# Architecture Overview
+
+Mini Dreamer implements a simplified **world model architecture inspired by Dreamer-style systems**.
+
+Core components:
+
+```
+Environment
+    ↓
+Observation Encoder
+    ↓
+Latent Representation (z)
+    ↓
+Recurrent State Space Model (RSSM)
+    ↓
+Decoder
+    ↓
+Predicted Observation
+```
+
+The recurrent latent state captures temporal dynamics of the environment, enabling the model to predict future observations conditioned on actions.
 
 ---
 
@@ -224,7 +226,7 @@ world_gen.py
     procedural environment generation
 
 assets/
-    demo video
+    demo video and preview image
 
 checkpoints/
     saved model weights
@@ -240,41 +242,40 @@ The model optimizes a combined objective:
 L = reconstruction_loss + β · KL_divergence
 ```
 
-Where:
+Where
 
 - **reconstruction loss** = L1 prediction error  
 - **KL divergence** regularizes the latent representation  
 
-This objective encourages the model to learn a **compact predictive representation of the environment**.
+This encourages learning a **compact predictive latent space**.
 
 ---
 
-# Purpose of the Project
+# Future Work
 
-Mini Dreamer is intended as a **minimal experimental platform for studying world models and predictive learning**.
-
-The project demonstrates:
-
-- predictive representation learning
-- recurrent latent state models
-- replay buffer training
-- real-time online learning
-- interactive ML visualization
-
-The code is intentionally lightweight and designed for experimentation.
-
----
-
-# Possible Extensions
-
-Future directions may include:
+Potential extensions include:
 
 - reinforcement learning agents
 - curiosity-driven exploration
 - transformer-based world models
 - larger environments
 - dataset logging for offline training
-- multi-agent environments
+- multi-agent simulations
+
+---
+
+# Citation
+
+If you use this project in research or experiments, please cite:
+
+```
+@software{mini_dreamer,
+  author = {Tomasz Water},
+  title = {Mini Dreamer: Interactive World Model with Online Learning},
+  year = {2026},
+  url = {https://github.com/yourusername/mini-dreamer}
+}
+```
 
 ---
 
